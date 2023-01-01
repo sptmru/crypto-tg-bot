@@ -16,10 +16,17 @@ Create the virtual environment:
 
 ## Start
 
-Paste your `Telegram Bot API token` in `.env`:
+Paste the necessary data in `.env`:
 
 ```
 TELEGRAM_BOT_API_TOKEN=
+
+WEBHOOK_HOST=
+WEBHOOK_PATH=
+WEBHOOK_URL=${WEBHOOK_HOST}${WEBHOOK_PATH}
+
+WEBAPP_HOST=
+WEBAPP_PORT=
 ```
 
 To start:

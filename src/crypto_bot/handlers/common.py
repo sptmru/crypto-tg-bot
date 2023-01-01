@@ -1,16 +1,17 @@
 import logging
 
 from aiogram import Dispatcher, types
+from aiogram.dispatcher.webhook import SendMessage
 
 logger = logging.getLogger(__name__)
 
 
 async def start(message: types.Message):
-    await message.answer("Crypto Bot")
+    return SendMessage(message.chat.id, "Crypto Bot")
 
 
 async def unknown(message: types.Message):
-    await message.answer("Unknown command or data!")
+    return SendMessage(message.chat.id, "Unknown command or data!")
 
 
 def register_handlers(dispatcher: Dispatcher) -> None:
