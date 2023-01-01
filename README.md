@@ -16,6 +16,14 @@ Create the virtual environment:
 
 ## Start
 
+Paste your `Telegram Bot API token` in `.env`:
+
+```
+TELEGRAM_BOT_API_TOKEN=
+```
+
+To start:
+
 ```bash
 ./start
 ```

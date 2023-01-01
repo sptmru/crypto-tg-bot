@@ -28,6 +28,9 @@ jobs=4
 # active Python interpreter and may run arbitrary code.
 unsafe-load-any-extension=no
 
+disable=
+    C0114, # missing-module-docstring
+
 
 [MESSAGES CONTROL]
 
