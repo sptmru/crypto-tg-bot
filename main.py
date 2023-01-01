@@ -3,6 +3,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.utils.executor import start_webhook
 
+from src.crypto_bot.commands.commands import set_commands
 from src.crypto_bot.config import get_config
 from src.crypto_bot.handlers.handlers import register_handlers
 
@@ -17,6 +18,8 @@ dispatcher = Dispatcher(bot)
 async def on_startup(_: Dispatcher):
     await bot.set_webhook(config.webhook.url)
     logger.info("Webhook is set")
+    await set_commands(bot)
+    logger.info("Commands set")
 
 
 async def on_shutdown(_: Dispatcher):
