@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class TelegramBot:
     api_token: str
+    admin_id: int
 
 
 @dataclass
@@ -59,7 +60,11 @@ def _get_telegram_bot() -> TelegramBot:
     if api_token is None:
         logger.error("TELEGRAM_BOT_API_TOKEN is not provided")
         sys.exit(1)
-    return TelegramBot(api_token)
+    admin_id = os.getenv("TELEGRAM_ADMIN_ID")
+    if admin_id is None:
+        logger.error("TELEGRAM_ADMIN_ID is not provided")
+        sys.exit(1)
+    return TelegramBot(api_token, int(admin_id))
 
 
 def _get_webhook() -> Webhook:

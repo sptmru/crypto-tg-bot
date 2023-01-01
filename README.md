@@ -20,6 +20,7 @@ Paste the necessary data in `.env`:
 
 ```
 TELEGRAM_BOT_API_TOKEN=
+TELEGRAM_ADMIN_ID=
 
 WEBHOOK_HOST=
 WEBHOOK_PATH=
