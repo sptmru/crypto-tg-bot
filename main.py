@@ -5,6 +5,7 @@ from aiogram.utils.executor import start_webhook
 
 from src.crypto_bot.commands.commands import set_commands
 from src.crypto_bot.config import get_config
+from src.crypto_bot.filters.filters import bind_filters
 from src.crypto_bot.handlers.handlers import register_handlers
 from src.crypto_bot.middlewares.middlewares import setup_middlewares
 
@@ -30,6 +31,7 @@ async def on_shutdown(_: Dispatcher):
 
 def start() -> None:
     setup_middlewares(dispatcher, admin_id=config.telegram_bot.admin_id)
+    bind_filters(dispatcher)
     register_handlers(dispatcher)
     start_webhook(
         dispatcher=dispatcher,

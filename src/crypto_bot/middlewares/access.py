@@ -1,4 +1,5 @@
 import logging
+from typing import Dict
 
 from aiogram import types
 from aiogram.dispatcher.handler import CancelHandler
@@ -6,6 +7,7 @@ from aiogram.dispatcher.middlewares import LifetimeControllerMiddleware
 
 import src.crypto_bot.messages.middlewares.access as messages
 from src.crypto_bot.handlers.bot_utils import send_message
+from src.crypto_bot.models.role import UserRole
 
 logger = logging.getLogger(__name__)
 
@@ -40,3 +42,31 @@ class AccessMiddleware(LifetimeControllerMiddleware):
 
     def _is_admin(self, user_id: int) -> bool:
         return user_id == self.admin_id
+
+
+class RoleMiddleware(LifetimeControllerMiddleware):
+    skip_patterns = ["error", "update"]
+
+    def __init__(self, admin_id: int):
+        super().__init__()
+        self.admin_id = admin_id
+
+    async def pre_process(self, obj, data, *args):
+        match type(obj):
+            case types.Message:
+                message: types.Message = obj
+                await self._handle_message(message, data)
+            case _:
+                pass
+
+    async def _handle_message(self, message: types.Message, data: Dict):
+        user_id = message.from_user.id
+        if user_id == self.admin_id:
+            role = UserRole.ADMIN
+        else:
+            role = UserRole.USER
+        data["role"] = role
+        logger.info("User's [id = %d] role: %s", user_id, role.value)
+
+    async def post_process(self, obj, data, *args):
+        data.pop("role", None)
