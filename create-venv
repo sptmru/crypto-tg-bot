@@ -1,7 +1,71 @@
 #!/usr/bin/env bash
 
-python3.11 -m venv ./.venv
-source ./.venv/bin/activate
-python -m pip install -U pip
-pip install -r requirements.txt
-deactivate
+function create_venv {
+    python_version="3.11"
+    python_cmd="python${python_version}"
+
+    ${python_cmd} --version
+    if [[ $? -ne 0 ]]; then
+        install_python ${python_cmd}
+    fi
+
+    ${python_cmd} -m venv --clear ./.venv
+    source ./.venv/bin/activate
+    python -m pip install -U pip
+    if ! [[ -z ${1+x} ]]; then
+        pip install -r requirements-dev.txt
+        if [[ $? -eq 0 ]]; then
+            print_message "dev requirements installed"
+        else
+            print_message "dev requirements not installed" 1
+        fi
+    fi
+
+    pip install -r requirements.txt
+    if [[ $? -eq 0 ]]; then
+        print_message "requirements installed"
+    else
+        print_message "requirements not installed" 1
+    fi
+
+    deactivate
+}
+
+function install_python {
+    sudo apt update
+    sudo apt install software-properties-common
+    sudo add-apt-repository ppa:deadsnakes/ppa
+    python_cmd="$1"
+    sudo apt install "${python_cmd}-venv" -y
+}
+
+function print_message {
+    local green="\e[32m"
+    local red="\e[31m"
+    local no_color="\e[0m"
+
+    if [[ -z ${2+x} ]]; then
+        printf $green
+    else
+        printf $red
+    fi
+
+    local msg="$1"
+    local len=${#msg}
+    repeat "-" $len
+    echo "$msg"
+    repeat "-" $len
+
+    printf ${no_color}
+}
+
+function repeat {
+    local msg="$1"
+    local n=$2
+    for ((i = 0; i < n; i++)); do
+        echo -n "$msg"
+    done
+    echo ""
+}
+
+create_venv $1
