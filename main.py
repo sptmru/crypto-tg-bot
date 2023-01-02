@@ -30,7 +30,11 @@ async def on_shutdown(_: Dispatcher):
 
 
 def start() -> None:
-    setup_middlewares(dispatcher, admin_id=config.telegram_bot.admin_id)
+    setup_middlewares(
+        dispatcher,
+        admin_id=config.telegram_bot.admin_id,
+        access_ids=[config.telegram_bot.admin_id],
+    )
     bind_filters(dispatcher)
     register_handlers(dispatcher)
     start_webhook(

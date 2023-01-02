@@ -1,20 +1,95 @@
 import logging
+from typing import Callable
 
 from aiogram import Dispatcher, types
+from aiogram.dispatcher.handler import ctx_data
 
+import src.crypto_bot.messages.handlers.admin.access as messages
 from src.crypto_bot.handlers.bot_utils import send_message
 
 logger = logging.getLogger(__name__)
 
 
+class InvalidUserID(Exception):
+    def __init__(self, invalid_value: str):
+        super().__init__()
+        self.invalid_value = invalid_value
+
+
+def exception_handler(func: Callable) -> Callable:
+    async def wrapper(*args):
+        try:
+            message: types.Message = args[0]
+            await func(message)
+        except InvalidUserID as e:
+            logger.exception("Invalid user id value: %s", e.invalid_value)
+            await send_message(message.chat.id, messages.invalid_value())
+        except:  # pylint: disable=bare-except
+            logger.exception("Exception")
+
+    return wrapper
+
+
+@exception_handler
 async def access(message: types.Message):
-    logger.info("User [id = %d] pushed /access command", message.from_user.id)
-    await send_message(message.chat.id, "access")
+    admin_id = message.from_user.id
+    logger.info("Admin [id = %d] pushed /access command", admin_id)
+    user_id = get_user_id(message.text[7:])
+    is_admin = await handle_admin_user_id(admin_id, user_id)
+    if is_admin:
+        return
+    if not has_user_access(user_id):
+        provide_access(user_id)
+        logger.info("User [id = %d] has been provided access", user_id)
+        await send_message(admin_id, messages.admin_access_provided(user_id))
+        await send_message(user_id, messages.access_provided())
+    else:
+        await send_message(admin_id, messages.access_already_provided())
 
 
+@exception_handler
 async def noaccess(message: types.Message):
-    logger.info("User [id = %d] pushed /noaccess command", message.from_user.id)
-    await send_message(message.chat.id, "noaccess")
+    admin_id = message.from_user.id
+    logger.info("Admin [id = %d] pushed /noaccess command", admin_id)
+    user_id = get_user_id(message.text[9:])
+    is_admin = await handle_admin_user_id(admin_id, user_id)
+    if is_admin:
+        return
+    if has_user_access(user_id):
+        revoke_access(user_id)
+        logger.info("User [id = %d] has been revoked access", user_id)
+        await send_message(admin_id, messages.admin_access_revoked(user_id))
+        await send_message(user_id, messages.access_revoked())
+    else:
+        await send_message(admin_id, messages.access_not_provided_yet())
+
+
+def get_user_id(text: str) -> int:
+    try:
+        user_id = int(text)
+    except ValueError as exc:
+        raise InvalidUserID(text) from exc
+    return user_id
+
+
+async def handle_admin_user_id(admin_id: int, user_id: int) -> bool:
+    if admin_id == user_id:
+        await send_message(admin_id, messages.admin_text())
+        return True
+    return False
+
+
+def has_user_access(user_id: int) -> bool:
+    access_ids = ctx_data.get().get("access_ids")
+    return user_id in access_ids
+
+
+def provide_access(user_id: int) -> None:
+    ctx_data.get().get("access_ids").append(user_id)
+
+
+def revoke_access(user_id: int) -> None:
+    ctx_data.get().get("access_ids").remove(user_id)
 
 
 def register_handlers(dispatcher: Dispatcher) -> None:
