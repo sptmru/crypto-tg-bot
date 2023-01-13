@@ -14,6 +14,6 @@ class AdminFilter(BoundFilter):
     async def check(self, obj: TelegramObject):  # pylint: disable=unused-argument
         if self.is_admin is None:
             return True
-        data = ctx_data.get()
-        is_admin = data.get("role") is UserRole.ADMIN
+        user_role = ctx_data.get().get("role")
+        is_admin = user_role is UserRole.ADMIN
         return is_admin == self.is_admin

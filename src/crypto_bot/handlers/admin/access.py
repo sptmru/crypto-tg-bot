@@ -6,6 +6,7 @@ from aiogram.dispatcher.handler import ctx_data
 
 import src.crypto_bot.messages.handlers.admin.access as messages
 from src.crypto_bot.handlers.bot_utils import send_message
+from src.crypto_bot.services.repository import Repository
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +39,10 @@ async def access(message: types.Message):
     is_admin = await handle_admin_user_id(admin_id, user_id)
     if is_admin:
         return
-    if not has_user_access(user_id):
-        provide_access(user_id)
+    repo: Repository = ctx_data.get().get("repo")
+    user_repo = repo.get_user_repository()
+    if not user_repo.has_user_access(user_id):
+        user_repo.provide_access(user_id)
         logger.info("User [id = %d] has been provided access", user_id)
         await send_message(admin_id, messages.admin_access_provided(user_id))
         await send_message(user_id, messages.access_provided())
@@ -55,8 +58,10 @@ async def noaccess(message: types.Message):
     is_admin = await handle_admin_user_id(admin_id, user_id)
     if is_admin:
         return
-    if has_user_access(user_id):
-        revoke_access(user_id)
+    repo: Repository = ctx_data.get().get("repo")
+    user_repo = repo.get_user_repository()
+    if user_repo.has_user_access(user_id):
+        user_repo.revoke_access(user_id)
         logger.info("User [id = %d] has been revoked access", user_id)
         await send_message(admin_id, messages.admin_access_revoked(user_id))
         await send_message(user_id, messages.access_revoked())
@@ -77,19 +82,6 @@ async def handle_admin_user_id(admin_id: int, user_id: int) -> bool:
         await send_message(admin_id, messages.admin_text())
         return True
     return False
-
-
-def has_user_access(user_id: int) -> bool:
-    access_ids = ctx_data.get().get("access_ids")
-    return user_id in access_ids
-
-
-def provide_access(user_id: int) -> None:
-    ctx_data.get().get("access_ids").append(user_id)
-
-
-def revoke_access(user_id: int) -> None:
-    ctx_data.get().get("access_ids").remove(user_id)
 
 
 def register_handlers(dispatcher: Dispatcher) -> None:

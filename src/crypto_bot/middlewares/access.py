@@ -1,13 +1,14 @@
 import logging
-from typing import Dict, List
+from typing import Dict
 
 from aiogram import types
-from aiogram.dispatcher.handler import CancelHandler
+from aiogram.dispatcher.handler import CancelHandler, ctx_data
 from aiogram.dispatcher.middlewares import LifetimeControllerMiddleware
 
 import src.crypto_bot.messages.middlewares.access as messages
 from src.crypto_bot.handlers.bot_utils import send_message
 from src.crypto_bot.models.role import UserRole
+from src.crypto_bot.services.repository import Repository
 
 logger = logging.getLogger(__name__)
 
@@ -15,10 +16,9 @@ logger = logging.getLogger(__name__)
 class AccessMiddleware(LifetimeControllerMiddleware):
     skip_patterns = ["error", "update"]
 
-    def __init__(self, admin_id: int, access_ids: List[int]):
+    def __init__(self, admin_id: int):
         super().__init__()
         self.admin_id = admin_id
-        self.access_ids = access_ids
 
     async def pre_process(self, obj, data, *args):
         match type(obj):
@@ -34,8 +34,8 @@ class AccessMiddleware(LifetimeControllerMiddleware):
     async def _handle_message(self, message: types.Message):
         user_id = message.from_user.id
         logger.info("User [id = %d] is trying to get access", user_id)
-        print(self.access_ids)
-        if not self._has_user_access(user_id):
+        repo: Repository = ctx_data.get().get("repo")
+        if not repo.get_user_repository().has_user_access(user_id):
             logger.info("Access denied for user [id = %d]", user_id)
             await send_message(message.chat.id, messages.access_denied())
             await send_message(self.admin_id, messages.access_requested(user_id))
@@ -43,17 +43,13 @@ class AccessMiddleware(LifetimeControllerMiddleware):
         else:
             logger.info("Access provided for user [id = %d]", user_id)
 
-    def _has_user_access(self, user_id: int) -> bool:
-        return user_id in self.access_ids
-
 
 class RoleMiddleware(LifetimeControllerMiddleware):
     skip_patterns = ["error", "update"]
 
-    def __init__(self, admin_id: int, access_ids: List[int]):
+    def __init__(self, admin_id: int):
         super().__init__()
         self.admin_id = admin_id
-        self.access_ids = access_ids
 
     async def pre_process(self, obj, data, *args):
         match type(obj):
@@ -67,7 +63,6 @@ class RoleMiddleware(LifetimeControllerMiddleware):
         user_id = message.from_user.id
         if user_id == self.admin_id:
             role = UserRole.ADMIN
-            data["access_ids"] = self.access_ids
         else:
             role = UserRole.USER
         data["role"] = role
@@ -75,4 +70,3 @@ class RoleMiddleware(LifetimeControllerMiddleware):
 
     async def post_process(self, obj, data, *args):
         data.pop("role", None)
-        data.pop("access_ids", None)
