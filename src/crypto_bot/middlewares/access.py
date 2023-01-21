@@ -41,7 +41,7 @@ class AccessMiddleware(LifetimeControllerMiddleware):
         user_id = message.from_user.id
         logger.info("User [id = %d] is trying to get access", user_id)
         repo: Repository = ctx_data.get().get("repo")
-        if not repo.get_user_repository().has_user_access(user_id):
+        if not await repo.get_user_repository().has_user_access(user_id):
             logger.info("Access denied for user [id = %d]", user_id)
             await send_message(message.chat.id, messages.access_denied())
             await send_message(self.admin_id, messages.access_requested(user_id))

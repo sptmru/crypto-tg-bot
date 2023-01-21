@@ -7,9 +7,9 @@ from src.crypto_bot.services.exceptions import DBError
 
 
 def exception_handler(func: Callable):
-    def wrapper(*args):
+    async def wrapper(*args):
         try:
-            return func(*args)
+            return await func(*args)
         except Exception as exc:
             raise DBError() from exc
 
@@ -21,19 +21,19 @@ class UserRepository(AbstractUserRepository):
         self.collection = collection
 
     @exception_handler
-    def has_user_access(self, user_id: int) -> bool:
+    async def has_user_access(self, user_id: int) -> bool:
         query = {"user_id": user_id}
-        user = self.collection.find_one(query)
+        user = await self.collection.find_one(query)
         if user is None:
             return False
         return True
 
     @exception_handler
-    def provide_access(self, user_id: int) -> None:
+    async def provide_access(self, user_id: int) -> None:
         query = {"user_id": user_id}
-        self.collection.insert_one(query)
+        await self.collection.insert_one(query)
 
     @exception_handler
-    def revoke_access(self, user_id: int) -> None:
+    async def revoke_access(self, user_id: int) -> None:
         query = {"user_id": user_id}
-        self.collection.delete_one(query)
+        await self.collection.delete_one(query)

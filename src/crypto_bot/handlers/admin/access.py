@@ -45,8 +45,8 @@ async def access(message: types.Message):
         return
     repo: Repository = ctx_data.get().get("repo")
     user_repo = repo.get_user_repository()
-    if not user_repo.has_user_access(user_id):
-        user_repo.provide_access(user_id)
+    if not await user_repo.has_user_access(user_id):
+        await user_repo.provide_access(user_id)
         logger.info("User [id = %d] has been provided access", user_id)
         await send_message(admin_id, messages.admin_access_provided(user_id))
         await send_message(user_id, messages.access_provided())
@@ -64,8 +64,8 @@ async def noaccess(message: types.Message):
         return
     repo: Repository = ctx_data.get().get("repo")
     user_repo = repo.get_user_repository()
-    if user_repo.has_user_access(user_id):
-        user_repo.revoke_access(user_id)
+    if await user_repo.has_user_access(user_id):
+        await user_repo.revoke_access(user_id)
         logger.info("User [id = %d] has been revoked access", user_id)
         await send_message(admin_id, messages.admin_access_revoked(user_id))
         await send_message(user_id, messages.access_revoked())

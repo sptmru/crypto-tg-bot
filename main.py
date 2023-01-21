@@ -1,8 +1,8 @@
 import logging
 
+import motor.motor_asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.utils.executor import start_webhook
-from pymongo import MongoClient
 
 from src.crypto_bot.commands.commands import set_commands
 from src.crypto_bot.config import get_config
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 config = get_config()
 bot = Bot(token=config.telegram_bot.api_token)
 dispatcher = Dispatcher(bot)
-mongo_client = MongoClient(config.db.connection_uri)
+mongo_client = motor.motor_asyncio.AsyncIOMotorClient(config.db.connection_uri)
 
 
 async def on_startup(_: Dispatcher):
