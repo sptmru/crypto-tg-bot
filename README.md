@@ -16,6 +16,8 @@ Create the virtual environment:
 
 ## Start
 
+The environment variable `DB_URI` contains MongoDB connection string.
+
 Paste the necessary data in `.env`:
 
 ```
@@ -28,6 +30,8 @@ WEBHOOK_URL=${WEBHOOK_HOST}${WEBHOOK_PATH}
 
 WEBAPP_HOST=
 WEBAPP_PORT=
+
+DB_URI=
 ```
 
 To start:

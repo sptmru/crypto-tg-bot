@@ -29,10 +29,16 @@ class WebApp:
 
 
 @dataclass
+class DBConfig:
+    connection_uri: str
+
+
+@dataclass
 class Config:
     telegram_bot: TelegramBot
     webhook: Webhook
     webapp: WebApp
+    db: DBConfig
 
 
 ROOT_DIR = Path(__file__).parent.parent.parent.absolute()
@@ -44,6 +50,7 @@ def get_config() -> Config:
         telegram_bot=_get_telegram_bot(),
         webhook=_get_webhook(),
         webapp=_get_webapp(),
+        db=_get_db_config(),
     )
 
 
@@ -93,3 +100,11 @@ def _get_webapp() -> WebApp:
         logger.error("WEBAPP_PORT is not provided")
         sys.exit(1)
     return WebApp(host, int(port))
+
+
+def _get_db_config() -> DBConfig:
+    db_uri = os.getenv("DB_URI")
+    if db_uri is None:
+        logger.error("DB_URI is not provided")
+        sys.exit(1)
+    return DBConfig(connection_uri=db_uri)

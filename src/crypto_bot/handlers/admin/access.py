@@ -6,6 +6,7 @@ from aiogram.dispatcher.handler import ctx_data
 
 import src.crypto_bot.messages.handlers.admin.access as messages
 from src.crypto_bot.handlers.bot_utils import send_message
+from src.crypto_bot.services.exceptions import DBError
 from src.crypto_bot.services.repository import Repository
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,9 @@ def exception_handler(func: Callable) -> Callable:
         except InvalidUserID as e:
             logger.exception("Invalid user id value: %s", e.invalid_value)
             await send_message(message.chat.id, messages.invalid_value())
+        except DBError:
+            logger.exception("DB error occured")
+            await send_message(message.chat.id, messages.db_error_message())
         except:  # pylint: disable=bare-except
             logger.exception("Exception")
 

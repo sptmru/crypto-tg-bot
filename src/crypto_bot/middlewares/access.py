@@ -8,6 +8,7 @@ from aiogram.dispatcher.middlewares import LifetimeControllerMiddleware
 import src.crypto_bot.messages.middlewares.access as messages
 from src.crypto_bot.handlers.bot_utils import send_message
 from src.crypto_bot.models.role import UserRole
+from src.crypto_bot.services.exceptions import DBError
 from src.crypto_bot.services.repository import Repository
 
 logger = logging.getLogger(__name__)
@@ -24,7 +25,12 @@ class AccessMiddleware(LifetimeControllerMiddleware):
         match type(obj):
             case types.Message:
                 message: types.Message = obj
-                await self._handle_message(message)
+                try:
+                    await self._handle_message(message)
+                except DBError:
+                    logger.exception("DB error occured")
+                    await send_message(message.chat.id, messages.db_error_message())
+                    raise CancelHandler()  # pylint: disable=raise-missing-from
             case _:
                 pass
 

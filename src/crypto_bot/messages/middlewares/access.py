@@ -4,3 +4,7 @@ def access_denied() -> str:
 
 def access_requested(user_id: int) -> str:
     return f"/access{user_id}"
+
+
+def db_error_message() -> str:
+    return "Unknown error!"

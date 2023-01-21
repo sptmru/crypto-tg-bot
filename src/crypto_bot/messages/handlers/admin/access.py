@@ -28,3 +28,7 @@ def access_revoked() -> str:
 
 def access_not_provided_yet() -> str:
     return "User has not got access yet"
+
+
+def db_error_message() -> str:
+    return "Unknown error!"

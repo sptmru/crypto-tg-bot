@@ -2,6 +2,7 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.utils.executor import start_webhook
+from pymongo import MongoClient
 
 from src.crypto_bot.commands.commands import set_commands
 from src.crypto_bot.config import get_config
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 config = get_config()
 bot = Bot(token=config.telegram_bot.api_token)
 dispatcher = Dispatcher(bot)
+mongo_client = MongoClient(config.db.connection_uri)
 
 
 async def on_startup(_: Dispatcher):
@@ -27,13 +29,15 @@ async def on_startup(_: Dispatcher):
 async def on_shutdown(_: Dispatcher):
     await bot.delete_webhook()
     logger.info("Webhook is deleted")
+    mongo_client.close()
+    logger.info("DB connection is closed")
 
 
 def start() -> None:
     setup_middlewares(
         dispatcher,
         admin_id=config.telegram_bot.admin_id,
-        access_ids=[config.telegram_bot.admin_id],
+        connector=mongo_client,
     )
     bind_filters(dispatcher)
     register_handlers(dispatcher)
