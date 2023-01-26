@@ -1,2 +1,8 @@
 def help_text() -> str:
-    return "/start - start.\n/help - help.\n/access - access.\n/noaccess - noaccess."
+    return (
+        "/start - настройка конфигуратора.\n"
+        "/help - помощь.\n"
+        "/access - предоставление доступа.\n"
+        "/noaccess - отзыв доступа.\n"
+        "/deny - отклонение заявки на доступ."
+    )

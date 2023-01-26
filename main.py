@@ -9,6 +9,7 @@ from src.crypto_bot.config import get_config
 from src.crypto_bot.filters.filters import bind_filters
 from src.crypto_bot.handlers.handlers import register_handlers
 from src.crypto_bot.middlewares.middlewares import setup_middlewares
+from src.crypto_bot.services.repository import Repository
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -19,11 +20,18 @@ dispatcher = Dispatcher(bot)
 mongo_client = motor.motor_asyncio.AsyncIOMotorClient(config.db.connection_uri)
 
 
+async def init_db():
+    repository = Repository(mongo_client)
+    await repository.init_db(config.telegram_bot.admin_id)
+
+
 async def on_startup(_: Dispatcher):
     await bot.set_webhook(config.webhook.url)
     logger.info("Webhook is set")
     await set_commands(bot)
     logger.info("Commands set")
+    await init_db()
+    logger.info("DB is initialized")
 
 
 async def on_shutdown(_: Dispatcher):

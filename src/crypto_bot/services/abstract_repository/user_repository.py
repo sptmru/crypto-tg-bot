@@ -1,15 +1,21 @@
 from abc import ABC, abstractmethod
 
+from src.crypto_bot.models.user import User
+
 
 class UserRepository(ABC):
     @abstractmethod
-    async def has_user_access(self, user_id: int) -> bool:
+    async def insert_user(self, user: User) -> int:
         raise NotImplementedError()
 
     @abstractmethod
-    async def provide_access(self, user_id: int) -> None:
+    async def get_user(self, user_id: int) -> User:
         raise NotImplementedError()
 
     @abstractmethod
-    async def revoke_access(self, user_id: int) -> None:
+    async def update_user(self, user: User) -> int:
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def delete_user(self, user_id: int) -> int:
         raise NotImplementedError()
