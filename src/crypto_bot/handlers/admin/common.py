@@ -10,7 +10,11 @@ logger = logging.getLogger(__name__)
 
 async def cmd_help(message: types):
     logger.info("User [id = %d] pushed /help command", message.from_user.id)
-    await send_message(message.chat.id, messages.help_text())
+    await send_message(
+        chat_id=message.chat.id,
+        text=messages.help_text(),
+        parse_mode=types.ParseMode.HTML,
+    )
 
 
 def register_handlers(dispatcher: Dispatcher) -> None:

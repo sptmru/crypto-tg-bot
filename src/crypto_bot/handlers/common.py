@@ -16,7 +16,11 @@ async def cmd_start(message: types.Message):
 
 async def cmd_help(message: types.Message):
     logger.info("User [id = %d] pushed help command", message.from_user.id)
-    await send_message(message.chat.id, messages.help_text())
+    await send_message(
+        chat_id=message.chat.id,
+        text=messages.help_text(),
+        parse_mode=types.ParseMode.HTML,
+    )
 
 
 async def unknown(message: types.Message):

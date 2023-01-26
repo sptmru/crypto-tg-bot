@@ -29,5 +29,9 @@ def help_command() -> str:
 # Help message
 
 
-def help_text() -> str:
+def common_help_text() -> str:
     return "/start - настройка конфигуратора.\n" "/help - помощь."
+
+
+def help_text() -> str:
+    return f"{common_help_text()}"
