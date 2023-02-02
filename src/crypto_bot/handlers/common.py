@@ -2,16 +2,19 @@ import logging
 from typing import List
 
 from aiogram import Dispatcher, types
+from aiogram_dialog import DialogManager, StartMode
 
 import src.crypto_bot.messages.handlers.common as messages
+from src.crypto_bot.dialogs.configurator.states import ConfiguratorDialog
 from src.crypto_bot.handlers.bot_utils import send_message
 
 logger = logging.getLogger(__name__)
 
 
-async def cmd_start(message: types.Message):
+async def cmd_start(message: types.Message, dialog_manager: DialogManager):
     logger.info("User [id = %d] pushed start command", message.from_user.id)
     await send_message(message.chat.id, messages.start())
+    await dialog_manager.start(ConfiguratorDialog.buy_mode, mode=StartMode.RESET_STACK)
 
 
 async def cmd_help(message: types.Message):

@@ -2,10 +2,13 @@ import logging
 
 import motor.motor_asyncio
 from aiogram import Bot, Dispatcher
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.utils.executor import start_webhook
+from aiogram_dialog import DialogRegistry
 
 from src.crypto_bot.commands.commands import set_commands
 from src.crypto_bot.config import get_config
+from src.crypto_bot.dialogs.dialogs import register_dialogs
 from src.crypto_bot.filters.filters import bind_filters
 from src.crypto_bot.handlers.handlers import register_handlers
 from src.crypto_bot.middlewares.middlewares import setup_middlewares
@@ -16,7 +19,9 @@ logger = logging.getLogger(__name__)
 
 config = get_config()
 bot = Bot(token=config.telegram_bot.api_token)
-dispatcher = Dispatcher(bot)
+storage = MemoryStorage()
+dispatcher = Dispatcher(bot, storage=storage)
+dialog_registry = DialogRegistry(dispatcher)
 mongo_client = motor.motor_asyncio.AsyncIOMotorClient(config.db.connection_uri)
 
 
@@ -48,6 +53,7 @@ def start() -> None:
         connector=mongo_client,
     )
     bind_filters(dispatcher)
+    register_dialogs(dialog_registry)
     register_handlers(dispatcher)
     start_webhook(
         dispatcher=dispatcher,
