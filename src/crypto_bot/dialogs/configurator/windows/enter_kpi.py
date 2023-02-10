@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.input import MessageInput
@@ -11,44 +13,47 @@ from src.crypto_bot.dialogs.configurator.windows.common import (
     get_back_cancel_keyboard,
 )
 from src.crypto_bot.models.configuration import Configuration
-from src.crypto_bot.models.crypto_exchange import CryptoExchange
 
 
 @exception_handler
 async def handle_message(
     message: Message, dialog: Dialog, manager: DialogManager
 ):  # pylint: disable=unused-argument
-    await message.delete()
+    try:
+        kpi_value = Decimal(message.text)
+    except InvalidOperation:
+        await message.answer(messages.invalid_value())
+        return
+    if kpi_value < 0:
+        await message.answer(messages.invalid_value())
+        return
     configuration: Configuration = manager.current_context().dialog_data[
         "configuration"
     ]
-    configuration.api_secret = message.text
-    await manager.update({"configuration": configuration})
-    if configuration.crypto_exchange == CryptoExchange.KUCOIN:
-        await manager.dialog().switch_to(ConfiguratorDialog.api_passphrase)
+    if configuration.kpi_usd_values[-1].kpi > kpi_value:  # type: ignore
+        await message.answer(messages.lower_kpi())
         return
-    else:
-        await manager.done()
-        await message.answer(f"Введенные данные: {configuration}")
+    await manager.update({"kpi_value": kpi_value})
+    await manager.dialog().switch_to(ConfiguratorDialog.enter_usd_value)
 
 
 @exception_handler
 async def back_click(
     call: CallbackQuery, button: Button, manager: DialogManager
 ):  # pylint: disable=unused-argument
-    await manager.dialog().switch_to(ConfiguratorDialog.usd)
+    await manager.dialog().switch_to(ConfiguratorDialog.company_buy)
 
 
 async def get_data(*args, **kwargs):  # pylint: disable=unused-argument
     return {
-        "api_secret": messages.api_secret(),
+        "enter_kpi": messages.enter_kpi(),
     }
 
 
-api_secret = Window(
-    Format("{api_secret}"),
-    get_back_cancel_keyboard(window_name="api_secret", on_back=back_click),
+enter_kpi = Window(
+    Format("{enter_kpi}"),
+    get_back_cancel_keyboard(window_name="enter_kpi", show_back=False),
     MessageInput(handle_message),
-    state=ConfiguratorDialog.api_secret,
+    state=ConfiguratorDialog.enter_kpi,
     getter=get_data,
 )

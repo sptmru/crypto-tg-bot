@@ -1,17 +1,26 @@
 from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import Button, Group, Row
-from aiogram_dialog.widgets.text import Const
+from aiogram_dialog.widgets.text import Const, Format
 
+import src.crypto_bot.messages.dialogs.configurator.windows as messages
 from src.crypto_bot.dialogs.configurator.states import ConfiguratorDialog
-from src.crypto_bot.dialogs.configurator.windows.common import cancel, exception_handler
+from src.crypto_bot.dialogs.configurator.windows.common import (
+    exception_handler,
+    get_back_cancel_keyboard,
+)
+from src.crypto_bot.models.configuration import Configuration
 
 
 @exception_handler
 async def next_click(
     call: CallbackQuery, button: Button, manager: DialogManager
 ):  # pylint: disable=unused-argument
-    await manager.update({"period": call.data})
+    configuration: Configuration = manager.current_context().dialog_data[
+        "configuration"
+    ]
+    configuration.period = int(button.widget_id)
+    await manager.update({"configuration": configuration})
     await manager.dialog().switch_to(ConfiguratorDialog.usd)
 
 
@@ -22,22 +31,31 @@ async def back_click(
     await manager.dialog().switch_to(ConfiguratorDialog.crypto_exchange)
 
 
+async def get_data(*args, **kwargs):  # pylint: disable=unused-argument
+    return {
+        "period": messages.period(),
+    }
+
+
+def get_periods_keyboard() -> Group:
+    group = Group(
+        Row(
+            Button(Const(messages.get_period_text(1)), id="1", on_click=next_click),
+            Button(Const(messages.get_period_text(7)), id="7", on_click=next_click),
+        ),
+        Row(
+            Button(Const(messages.get_period_text(10)), id="10", on_click=next_click),
+            Button(Const(messages.get_period_text(14)), id="14", on_click=next_click),
+        ),
+        Button(Const(messages.get_period_text(30)), id="30", on_click=next_click),
+    )
+    return group
+
+
 period = Window(
-    Const("Выберите периодичность покупки:"),
-    Group(
-        Row(
-            Button(Const("Каждый день"), id="1", on_click=next_click),
-            Button(Const("Каждая неделя"), id="7", on_click=next_click),
-        ),
-        Row(
-            Button(Const("Каждая декада"), id="10", on_click=next_click),
-            Button(Const("Каждые 2 недели"), id="14", on_click=next_click),
-        ),
-        Button(Const("Каждые 30 дней"), id="30", on_click=next_click),
-    ),
-    Row(
-        Button(Const("Назад"), id="period_back", on_click=back_click),
-        Button(Const("Отмена"), id="period_cancel", on_click=cancel),
-    ),
+    Format("{period}"),
+    get_periods_keyboard(),
+    get_back_cancel_keyboard(window_name="period", on_back=back_click),
     state=ConfiguratorDialog.period,
+    getter=get_data,
 )
