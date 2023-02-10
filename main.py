@@ -48,8 +48,9 @@ async def on_shutdown(_: Dispatcher):
 
 def start() -> None:
     setup_middlewares(
-        dispatcher,
+        dispatcher=dispatcher,
         admin_id=config.telegram_bot.admin_id,
+        server_ip=config.server.ip_address,
         connector=mongo_client,
     )
     bind_filters(dispatcher)

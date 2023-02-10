@@ -1,3 +1,4 @@
+from aiogram.dispatcher.handler import ctx_data
 from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import Button, Group, Row
@@ -9,7 +10,7 @@ from src.crypto_bot.dialogs.configurator.windows.common import (
     exception_handler,
     get_back_cancel_keyboard,
 )
-from src.crypto_bot.models.configuration import Configuration
+from src.crypto_bot.models.configuration import BuyMode, Configuration
 
 
 @exception_handler
@@ -21,7 +22,13 @@ async def next_click(
     ]
     configuration.period = int(button.widget_id)
     await manager.update({"configuration": configuration})
-    await manager.dialog().switch_to(ConfiguratorDialog.usd)
+    if configuration.buy_mode == BuyMode.PERSONAL:
+        await manager.dialog().switch_to(ConfiguratorDialog.usd)
+    elif configuration.buy_mode == BuyMode.COMPANY:
+        await call.message.answer(messages.server_ip())
+        server_ip = ctx_data.get().get("server_ip")
+        await call.message.answer(server_ip)
+        await manager.dialog().switch_to(ConfiguratorDialog.api_key)
 
 
 @exception_handler

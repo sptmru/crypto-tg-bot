@@ -34,11 +34,17 @@ class DBConfig:
 
 
 @dataclass
+class Server:
+    ip_address: str
+
+
+@dataclass
 class Config:
     telegram_bot: TelegramBot
     webhook: Webhook
     webapp: WebApp
     db: DBConfig
+    server: Server
 
 
 ROOT_DIR = Path(__file__).parent.parent.parent.absolute()
@@ -51,6 +57,7 @@ def get_config() -> Config:
         webhook=_get_webhook(),
         webapp=_get_webapp(),
         db=_get_db_config(),
+        server=_get_server(),
     )
 
 
@@ -108,3 +115,11 @@ def _get_db_config() -> DBConfig:
         logger.error("DB_URI is not provided")
         sys.exit(1)
     return DBConfig(connection_uri=db_uri)
+
+
+def _get_server() -> Server:
+    ip_address = os.getenv("SERVER_IP")
+    if ip_address is None:
+        logger.error("SERVER_IP is not provided")
+        sys.exit(1)
+    return Server(ip_address)

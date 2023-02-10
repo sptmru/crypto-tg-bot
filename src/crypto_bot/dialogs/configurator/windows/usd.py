@@ -1,5 +1,6 @@
 from decimal import Decimal, InvalidOperation
 
+from aiogram.dispatcher.handler import ctx_data
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.input import MessageInput
@@ -32,6 +33,9 @@ async def handle_message(
     ]
     configuration.usd = usd_value
     await manager.update({"configuration": configuration})
+    await message.answer(messages.server_ip())
+    server_ip = ctx_data.get().get("server_ip")
+    await message.answer(server_ip)
     await manager.dialog().switch_to(ConfiguratorDialog.api_key)
 
 

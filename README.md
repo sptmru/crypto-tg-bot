@@ -32,6 +32,8 @@ WEBAPP_HOST=
 WEBAPP_PORT=
 
 DB_URI=
+
+SERVER_IP=
 ```
 
 To start:

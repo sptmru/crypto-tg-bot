@@ -126,5 +126,9 @@ def get_period_text(days: int) -> str:
     return text
 
 
-def lower_kpi():
+def lower_kpi() -> str:
     return "Текущение значение KPI должно быть больше, чем предыдущее"
+
+
+def server_ip() -> str:
+    return "Для лучшей работы при создании ключа можно добавить IP-адрес сервера:"
