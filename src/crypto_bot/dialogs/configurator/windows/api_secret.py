@@ -1,3 +1,4 @@
+from aiogram.dispatcher.handler import ctx_data
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.input import MessageInput
@@ -12,6 +13,7 @@ from src.crypto_bot.dialogs.configurator.windows.common import (
 )
 from src.crypto_bot.models.configuration import Configuration
 from src.crypto_bot.models.crypto_exchange import CryptoExchange
+from src.crypto_bot.services.repository import Repository
 
 
 @exception_handler
@@ -29,6 +31,8 @@ async def handle_message(
         return
     else:
         await manager.done()
+        repo: Repository = ctx_data.get().get("repo")
+        await repo.get_configuration_repository().insert_configuration(configuration)
         await message.answer(f"Введенные данные: {configuration}")
 
 

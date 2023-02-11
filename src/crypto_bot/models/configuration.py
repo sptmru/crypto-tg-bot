@@ -19,6 +19,7 @@ class KPIUsd:
 
 @dataclass
 class Configuration:
+    user_id: int = -1
     buy_mode: Optional[BuyMode] = None
     kpi_usd_values: List[KPIUsd] = field(default_factory=list)
     crypto_exchange: Optional[CryptoExchange] = None

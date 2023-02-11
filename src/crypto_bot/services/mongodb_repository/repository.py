@@ -2,7 +2,10 @@ from src.crypto_bot.models.user import User
 from src.crypto_bot.services.abstract_repository.repository import (
     Repository as AbstractRepository,
 )
-from src.crypto_bot.services.mongodb_repository.user_repository import UserRepository
+from src.crypto_bot.services.mongodb_repository.configuration import (
+    ConfigurationRepository,
+)
+from src.crypto_bot.services.mongodb_repository.user import UserRepository
 
 
 class Repository(AbstractRepository):
@@ -10,6 +13,7 @@ class Repository(AbstractRepository):
         db = client.crypto
         super().__init__(
             user_repository=UserRepository(collection=db.users),
+            configuration_repository=ConfigurationRepository(collection=db.users),
         )
         self.client = client
 

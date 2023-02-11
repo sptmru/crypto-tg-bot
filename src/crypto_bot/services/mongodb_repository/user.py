@@ -1,7 +1,7 @@
 from typing import Callable, Dict
 
 from src.crypto_bot.models.user import User
-from src.crypto_bot.services.abstract_repository.user_repository import (
+from src.crypto_bot.services.abstract_repository.user import (
     UserRepository as AbstractUserRepository,
 )
 from src.crypto_bot.services.exceptions import DBError
@@ -53,14 +53,19 @@ class UserRepository(AbstractUserRepository):
 
 
 def user_from_dict(user_dict: Dict) -> User:
-    user = User(**user_dict)
+    user = User(
+        user_id=user_dict["user_id"],
+        sent_request=user_dict["has_sent_request"],
+        access=user_dict["has_access"],
+        configured=user_dict.get("configuration") is not None,
+    )
     return user
 
 
 def user_to_dict(user: User, with_user_id: bool = True) -> Dict:
     user_dict: Dict = {
-        "sent_request": user.sent_request,
-        "access": user.access,
+        "has_sent_request": user.sent_request,
+        "has_access": user.access,
     }
     if with_user_id:
         user_dict["user_id"] = user.user_id

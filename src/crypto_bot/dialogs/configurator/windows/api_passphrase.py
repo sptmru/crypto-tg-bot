@@ -1,3 +1,4 @@
+from aiogram.dispatcher.handler import ctx_data
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.input import MessageInput
@@ -11,6 +12,7 @@ from src.crypto_bot.dialogs.configurator.windows.common import (
     get_back_cancel_keyboard,
 )
 from src.crypto_bot.models.configuration import Configuration
+from src.crypto_bot.services.repository import Repository
 
 
 @exception_handler
@@ -23,6 +25,8 @@ async def handle_message(
     ]
     configuration.api_passphrase = message.text
     await manager.update({"configuration": configuration})
+    repo: Repository = ctx_data.get().get("repo")
+    await repo.get_configuration_repository().insert_configuration(configuration)
     await message.answer(f"Введенные данные: {configuration}")
     await manager.done()
 

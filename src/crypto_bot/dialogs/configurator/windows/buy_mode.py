@@ -16,7 +16,7 @@ from src.crypto_bot.models.configuration import BuyMode, Configuration
 async def next_click_personal(
     call: CallbackQuery, button: Button, manager: DialogManager
 ):  # pylint: disable=unused-argument
-    configuration = Configuration()
+    configuration = Configuration(user_id=call.from_user.id)
     configuration.buy_mode = BuyMode(button.widget_id)
     await manager.update({"configuration": configuration})
     await manager.dialog().switch_to(ConfiguratorDialog.crypto_exchange)
@@ -26,7 +26,7 @@ async def next_click_personal(
 async def next_click_company(
     call: CallbackQuery, button: Button, manager: DialogManager
 ):  # pylint: disable=unused-argument
-    configuration = Configuration()
+    configuration = Configuration(user_id=call.from_user.id)
     configuration.buy_mode = BuyMode(button.widget_id)
     await manager.update({"configuration": configuration})
     await manager.dialog().switch_to(ConfiguratorDialog.company_buy)
