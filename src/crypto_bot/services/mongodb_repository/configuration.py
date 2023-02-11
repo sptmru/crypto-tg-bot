@@ -10,9 +10,9 @@ from src.crypto_bot.services.exceptions import DBError
 
 
 def exception_handler(func: Callable):
-    async def wrapper(*args):
+    async def wrapper(*args, **kwargs):
         try:
-            return await func(*args)
+            return await func(*args, **kwargs)
         except Exception as exc:
             raise DBError() from exc
 

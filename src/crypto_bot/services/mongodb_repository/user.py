@@ -8,9 +8,9 @@ from src.crypto_bot.services.exceptions import DBError
 
 
 def exception_handler(func: Callable):
-    async def wrapper(*args):
+    async def wrapper(*args, **kwargs):
         try:
-            return await func(*args)
+            return await func(*args, **kwargs)
         except Exception as exc:
             raise DBError() from exc
 
@@ -58,6 +58,9 @@ def user_from_dict(user_dict: Dict) -> User:
         sent_request=user_dict["has_sent_request"],
         access=user_dict["has_access"],
         configured=user_dict.get("configuration") is not None,
+        configured_date_ts=user_dict["configured_date_ts"],
+        next_date_ts=user_dict["next_date_ts"],
+        last_date_ts=user_dict["last_date_ts"],
     )
     return user
 
@@ -66,6 +69,9 @@ def user_to_dict(user: User, with_user_id: bool = True) -> Dict:
     user_dict: Dict = {
         "has_sent_request": user.sent_request,
         "has_access": user.access,
+        "configured_date_ts": user.configured_date_ts,
+        "next_date_ts": user.next_date_ts,
+        "last_date_ts": user.last_date_ts,
     }
     if with_user_id:
         user_dict["user_id"] = user.user_id

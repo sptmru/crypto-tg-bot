@@ -1,4 +1,6 @@
 import logging
+import os
+import time
 
 import motor.motor_asyncio
 from aiogram import Bot, Dispatcher
@@ -46,7 +48,13 @@ async def on_shutdown(_: Dispatcher):
     logger.info("DB connection is closed")
 
 
+def set_utc_time() -> None:
+    os.environ["TZ"] = "UTC"
+    time.tzset()
+
+
 def start() -> None:
+    set_utc_time()
     setup_middlewares(
         dispatcher=dispatcher,
         admin_id=config.telegram_bot.admin_id,

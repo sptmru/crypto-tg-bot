@@ -14,6 +14,7 @@ from src.crypto_bot.dialogs.configurator.windows.common import (
 from src.crypto_bot.models.configuration import Configuration
 from src.crypto_bot.models.crypto_exchange import CryptoExchange
 from src.crypto_bot.services.repository import Repository
+from src.crypto_bot.time_utils import get_current_date_utc_timestamp
 
 
 @exception_handler
@@ -33,6 +34,9 @@ async def handle_message(
         await manager.done()
         repo: Repository = ctx_data.get().get("repo")
         await repo.get_configuration_repository().insert_configuration(configuration)
+        user = await repo.get_user_repository().get_user(configuration.user_id)
+        user.configured_date_ts = get_current_date_utc_timestamp()
+        await repo.get_user_repository().update_user(user)
         await message.answer(f"Введенные данные: {configuration}")
 
 
