@@ -1,3 +1,6 @@
+from src.crypto_bot.messages.handlers.crypto import help_text as crypto_help_text
+
+
 def start() -> str:
     return (
         "Привет!\nПеред началом работы с любой биржей помните: то, что "
@@ -34,4 +37,4 @@ def common_help_text() -> str:
 
 
 def help_text() -> str:
-    return f"{common_help_text()}"
+    return f"{common_help_text()}\n" f"{crypto_help_text()}"
