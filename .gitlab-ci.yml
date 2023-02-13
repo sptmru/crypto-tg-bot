@@ -2,8 +2,8 @@ deploy:
   image: debian:stretch
   stage: deploy
   variables:
-    HEROKU_APP: django
-    HEROKU_DEPLOYMENT_BRANCH: main
+    HEROKU_APP: crypto-bot-tg
+    HEROKU_DEPLOYMENT_BRANCH: dev
   only:
     - main
   before_script:
