@@ -1,0 +1,26 @@
+deploy:
+  image: debian:stretch
+  stage: deploy
+  variables:
+    HEROKU_APP: django
+    HEROKU_DEPLOYMENT_BRANCH: main
+  only:
+    - main
+  before_script:
+    - apt-get update -y
+    - apt-get install -y curl git gnupg
+    - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+    - |
+      cat >~/.netrc <<EOF
+      machine api.heroku.com
+        login telegram@sptm.dev
+        password 939c73a2-8c1a-42c6-a1e5-fc30a525f985
+      machine git.heroku.com
+        login telegram@sptm.dev
+        password 939c73a2-8c1a-42c6-a1e5-fc30a525f985
+      EOF
+    - chmod 600 ~/.netrc
+    - heroku git:remote --app crypto-bot-tg
+  script:
+    - git checkout $CI_COMMIT_SHA
+    - git push heroku $CI_COMMIT_SHA:$HEROKU_DEPLOYMENT_BRANCH
