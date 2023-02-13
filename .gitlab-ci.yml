@@ -4,9 +4,11 @@ services:
 
 variables:
   DOCKER_DRIVER: overlay
-  HEROKU_APP_NAME: crypto-bot-tg
-  CACHE_IMAGE: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/crypto-bot-tg/web
+  HEROKU_APP_NAME: crypto-bot-tg
+  HEROKU_REGISTRY_USER: telegram@sptm.dev
+  HEROKU_TOKEN: 39c73a2-8c1a-42c6-a1e5-fc30a525f985
+  CACHE_IMAGE: registry.heroku.com/crypto-bot-tg
 
 stages:
   - build
@@ -15,11 +17,11 @@ docker-build:
   stage: build
   script:
     - apk add --no-cache curl
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u $HEROKU_REGISTRY_USER -p 39c73a2-8c1a-42c6-a1e5-fc30a525f985 registry.heroku.com/
     - docker pull $CACHE_IMAGE:crypto-bot-tg || true
     - docker pull $CACHE_IMAGE:production || true
     - docker build
-      --target crypto-bot-tg
+      --target crypto-bot-tg:latest
       --cache-from $CACHE_IMAGE:crypto-bot-tg
       --tag $CACHE_IMAGE:crypto-bot-tg
       --file ./Dockerfile
