@@ -2,6 +2,7 @@ image: python:3.11
 
 variables:
   HEROKU_APP: crypto-bot-tg
+  HEROKU_EMAIL: telegram@sptm.dev
   TG_API_KEY: "TELEGRAM_BOT_API_TOKEN=5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
 
 stages:
@@ -24,7 +25,26 @@ deploy:
   before_script:
     - apt-get update -y
     - apt-get install -y curl git gnupg
-    - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+    - set -ex
+    - dpkg -s apt-transport-https 1>/dev/null 2>/dev/null || (echo '' > /etc/apt/sources.list.d/heroku.list && apt-get update && apt-get install -y apt-transport-https)
+    - echo 'deb https://cli-assets.heroku.com/apt ./' > /etc/apt/sources.list.d/heroku.list
+    - (dpkg -s heroku-toolbelt 1>/dev/null 2>/dev/null && (apt-get remove -y heroku-toolbelt heroku || true)) || true
+    - curl https://cli-assets.heroku.com/apt/release.key | apt-key add -
+      # Download the package
+    - wget https://cli-assets.heroku.com/apt/heroku_7.67.2-1_amd64.deb
+      # Decompress it
+    - tar -x ./heroku_7.67.2-1_amd64.deb
+    - apt-get update
+    - apt-get install -y zstd
+    - zstd -d control.tar.zst
+    - zstd -d data.tar.zst
+    - xz control.tar
+    - xz data.tar
+    - rm heroku_7.67.2-1_amd64.deb
+      # Repackage it
+    - tar -rc heroku_7.67.2-1_amd64.deb debian-binary control.tar.xz data.tar.xz
+      # Install it
+    - dpkg -i heroku_7.67.2-1_amd64.deb
     - |
       cat >~/.netrc <<EOF
       machine api.heroku.com
