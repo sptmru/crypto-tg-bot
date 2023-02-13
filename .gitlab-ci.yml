@@ -7,10 +7,10 @@ variables:
   DOCKER_DRIVER: overlay
 
 stages:
-  - build
+  - deploy
 
-docker-build:
-  stage: build
+deploy:
+  stage: deploy
   script:
     - gem install dpl
     - dpl --provider=heroku --app=crypto-bot-tg --api-key=939c73a2-8c1a-42c6-a1e5-fc30a525f985
