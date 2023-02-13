@@ -1,8 +1,9 @@
 import logging
-
+import os
 from aiogram import Bot, Dispatcher, executor, types
+from dotenv import load_dotenv
 
-from config import TELEGRAM_BOT_API_TOKEN
+TELEGRAM_BOT_API_TOKEN = os.getenv(TG_API_KEY)
 
 logging.basicConfig(level=logging.DEBUG)
 
