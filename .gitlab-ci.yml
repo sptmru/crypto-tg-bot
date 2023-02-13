@@ -3,6 +3,7 @@ image: python:3.11
 variables:
   HEROKU_APP: crypto-bot-tg
   HEROKU_EMAIL: telegram@sptm.dev
+  HEROKU_TOKEN: 939c73a2-8c1a-42c6-a1e5-fc30a525f985
   TG_API_KEY: "TELEGRAM_BOT_API_TOKEN=5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
 
 stages:
@@ -33,7 +34,7 @@ deploy:
       # Download the package
     - wget https://cli-assets.heroku.com/apt/heroku_7.67.2-1_amd64.deb
       # Decompress it
-    - tar -x ./heroku_7.67.2-1_amd64.deb
+    - ar -x ./heroku_7.67.2-1_amd64.deb
     - apt-get update
     - apt-get install -y zstd
     - zstd -d control.tar.zst
@@ -42,7 +43,7 @@ deploy:
     - xz data.tar
     - rm heroku_7.67.2-1_amd64.deb
       # Repackage it
-    - tar -rc heroku_7.67.2-1_amd64.deb debian-binary control.tar.xz data.tar.xz
+    - ar -rc heroku_7.67.2-1_amd64.deb debian-binary control.tar.xz data.tar.xz
       # Install it
     - dpkg -i heroku_7.67.2-1_amd64.deb
     - |
