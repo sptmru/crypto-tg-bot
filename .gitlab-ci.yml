@@ -1,6 +1,7 @@
 deploy:
   image: debian:stretch
   stage: deploy
+  
   variables:
     HEROKU_APP: crypto-bot-tg
     HEROKU_DEPLOYMENT_BRANCH: dev
