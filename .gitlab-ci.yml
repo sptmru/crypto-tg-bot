@@ -6,7 +6,7 @@ deploy:
     HEROKU_APP: crypto-bot-tg
     HEROKU_DEPLOYMENT_BRANCH: dev
   only:
-    - main
+    - dev
   before_script:
     - apt-get update -y
     - apt-get install -y curl git gnupg
