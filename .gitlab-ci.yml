@@ -1,20 +1,38 @@
-
-image: docker:latest
+image: docker:stable
 services:
   - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay
-  HEROKU_TOKEN: 939c73a2-8c1a-42c6-a1e5-fc30a525f985
-  HEROKU_APP: crypto-bot-tg
+  HEROKU_APP_NAME: crypto-bot-tg
+  CACHE_IMAGE: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}
+  HEROKU_REGISTRY_IMAGE: registry.heroku.com/crypto-bot-tg/web
 
 stages:
-  - deploy
+  - build
 
-deploy:
-  stage: deploy
+docker-build:
+  stage: build
   script:
-    - docker buildx build --iidfile crypto-bot.txt
     - apk add --no-cache curl
-    - |-
-      curl -X PATCH https://api.heroku.com/apps/${HEROKU_APP}/formation --header "Content-Type: application/json" --header "Accept: application/vnd.heroku+json; version=3.docker-releases" --header "Authorization: Bearer ${HEROKU_TOKEN}" --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat imageid.txt)'" } ] }'
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $CACHE_IMAGE:cryptobot || true
+    - docker pull $CACHE_IMAGE:production || true
+    - docker build
+      --target cryptobot
+      --cache-from $CACHE_IMAGE:cryptobot
+      --tag $CACHE_IMAGE:cryptobot
+      --file ./Dockerfile
+      "."
+    - docker build
+      --cache-from $CACHE_IMAGE:production
+      --tag $CACHE_IMAGE:production
+      --tag $HEROKU_REGISTRY_IMAGE
+      --file ./Dockerfile
+      "."
+    - docker push $CACHE_IMAGE:cryptobot
+    - docker push $CACHE_IMAGE:production
+    - docker login -u _ -p $HEROKU_AUTH_TOKEN registry.heroku.com
+    - docker push $HEROKU_REGISTRY_IMAGE
+    - chmod +x ./release.sh
+    - ./release.sh
