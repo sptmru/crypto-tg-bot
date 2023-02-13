@@ -12,7 +12,7 @@ update-api-key:
     - dev
   script:
     - touch config.py
-    - $TG_API_KEY >> ./config.py
+    - echo $TG_API_KEY >> ./config.py
     - ./create-venv
 
 deploy:
