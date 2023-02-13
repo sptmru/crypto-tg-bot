@@ -1,3 +1,5 @@
+image: python:3.11
+
 variables:
   HEROKU_APP: crypto-bot-tg
   TG_API_KEY: "TELEGRAM_BOT_API_TOKEN=$TG_API_KEY"
