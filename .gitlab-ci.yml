@@ -24,19 +24,18 @@ docker-build:
     - docker build
       --platform linux/amd64
       --target crypto-bot-tg:latest
-      --cache-from $CACHE_IMAGE:crypto-bot-tg
-      --tag $CACHE_IMAGE:crypto-bot-tg
+      --cache-from $CACHE_IMAGE:latest
+      --tag $CACHE_IMAGE:latest
       --file ./Dockerfile
       "."
     - docker build
       --platform linux/amd64
       --cache-from $CACHE_IMAGE:production
-      --tag $CACHE_IMAGE:production
+      --tag $CACHE_IMAGE:latest
       --tag $HEROKU_REGISTRY_IMAGE
       --file ./Dockerfile
       "."
-    - docker push $CACHE_IMAGE:crypto-bot-tg
-    - docker push $CACHE_IMAGE:production
+    - docker push $CACHE_IMAGE:latest
     - docker login -u -p $HEROKU_TOKEN registry.heroku.com
     - docker push $HEROKU_REGISTRY_IMAGE
     - chmod +x ./release.sh
