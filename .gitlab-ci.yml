@@ -7,17 +7,7 @@ variables:
   TG_API_KEY: "TELEGRAM_BOT_API_TOKEN=5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
 
 stages:
-  - update-api-key
   - deploy
-
-update-api-key:
-  stage: update-api-key
-  only:
-    - dev
-  script:
-    - touch config.py
-    - echo $TG_API_KEY >> ./config.py
-    - ./create-venv
 
 deploy:
   stage: deploy
