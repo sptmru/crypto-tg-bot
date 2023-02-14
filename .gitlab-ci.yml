@@ -22,7 +22,7 @@ docker-build:
     - docker pull $CACHE_IMAGE:latest || true
     - docker build
       --platform linux/amd64
-      --target crypto-bot-tg:latest
+      --target production
       --cache-from $CACHE_IMAGE:latest
       --tag $CACHE_IMAGE:latest
       --file ./Dockerfile
