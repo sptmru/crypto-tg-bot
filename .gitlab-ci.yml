@@ -49,4 +49,4 @@ deploy:
     - heroku git:remote --app $HEROKU_APP
   script:
     - git checkout $CI_COMMIT_SHA
-    - git push heroku master
+    - git push heroku dev
