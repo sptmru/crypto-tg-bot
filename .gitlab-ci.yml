@@ -30,7 +30,7 @@ docker-build:
       "."
     - docker build
       --platform linux/amd64
-      --cache-from $CACHE_IMAGE:production
+      --cache-from $CACHE_IMAGE:latest
       --tag $CACHE_IMAGE:latest
       --tag $HEROKU_REGISTRY_IMAGE
       --file ./Dockerfile
