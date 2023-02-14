@@ -8,7 +8,7 @@ variables:
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/crypto-bot-tg/web
   HEROKU_APP_NAME: crypto-bot-tg
   HEROKU_REGISTRY_USER: telegram@sptm.dev
-  HEROKU_TOKEN: "da4a6967-a955-4a50-8492-38049bfe3117"
+  HEROKU_TOKEN: "b12fb990-3566-4264-8fd5-77d8f44adcab"
   CACHE_IMAGE: registry.heroku.com/crypto-bot-tg/web
 
 stages:
