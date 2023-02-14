@@ -3,11 +3,12 @@ services:
   - docker:dind
 
 variables:
+  TG_API_KEY: "5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
   DOCKER_DRIVER: overlay
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/crypto-bot-tg/web
   HEROKU_APP_NAME: crypto-bot-tg
   HEROKU_REGISTRY_USER: telegram@sptm.dev
-  HEROKU_TOKEN: da4a6967-a955-4a50-8492-38049bfe3117
+  HEROKU_TOKEN: "da4a6967-a955-4a50-8492-38049bfe3117"
   CACHE_IMAGE: registry.heroku.com/crypto-bot-tg/web
 
 stages:
