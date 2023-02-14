@@ -7,7 +7,7 @@ variables:
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/crypto-bot-tg/web
   HEROKU_APP_NAME: crypto-bot-tg
   HEROKU_REGISTRY_USER: telegram@sptm.dev
-  HEROKU_TOKEN: 39c73a2-8c1a-42c6-a1e5-fc30a525f985
+  HEROKU_TOKEN: da4a6967-a955-4a50-8492-38049bfe3117
   CACHE_IMAGE: registry.heroku.com/crypto-bot-tg
 
 stages:
@@ -34,7 +34,7 @@ docker-build:
       "."
     - docker push $CACHE_IMAGE:crypto-bot-tg
     - docker push $CACHE_IMAGE:production
-    - docker login -u _ -p $HEROKU_AUTH_TOKEN registry.heroku.com
+    - docker login -u _ -p HEROKU_TOKEN registry.heroku.com
     - docker push $HEROKU_REGISTRY_IMAGE
     - chmod +x ./release.sh
     - ./release.sh
