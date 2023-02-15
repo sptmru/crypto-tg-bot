@@ -11,7 +11,7 @@ processes = []
   BOT_ADMIN_ID = "289105332"
   WEBHOOK_URL = "https://cryptobot.sptm.dev"
   WEBHOOK_PATH = "/webhook"
-  SERVER_IP_ADDRESS = "66.241.124.100"
+  SERVER_IP_ADDRESS = "127.0.0.1"
   WEBAPP_HOST = "cryptobot.sptm.dev"
   WEBAPP_PORT = "8080"
 
