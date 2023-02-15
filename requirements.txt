@@ -1,2 +1,2 @@
 aiogram==2.25.1
-asyncio==3.4.3
+Flask==2.2.2
