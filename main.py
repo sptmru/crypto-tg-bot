@@ -21,9 +21,8 @@ async def unknown(message: types.Message):
     await message.answer("Unknown command or data!")
 
 
-async def create_task():
+async def main():
     asyncio.create_task(await dispatcher.start_polling())
 
 
-if __name__ == "__main__":
-    create_task()
+asyncio.run(main())
