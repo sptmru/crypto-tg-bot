@@ -23,6 +23,6 @@ async def unknown(message: types.Message):
 
 
 if __name__ == "__main__":
-    bot = Bot
-    dp = Dispatcher(bot)
+    crypto_bot = Bot
+    dp = Dispatcher(crypto_bot)
     asyncio.create_task(dp.start_polling())
