@@ -30,3 +30,11 @@ processes = []
     [[services.ports]]
       handlers = ["tls", "http"]
       port = "443"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
