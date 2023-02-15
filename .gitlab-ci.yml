@@ -20,8 +20,8 @@ build:
   script:
     - docker build --pull --force-rm --iidfile imageid.txt -t $HEROKU_APP_NAME .
     - echo "$HEROKU_APP_NAME" | docker login --username=$HEROKU_APP_NAME --password=$HEROKU_API_KEY $HEROKU_REGISTRY
-    - docker tag $HEROKU_APP_NAME:latest registry.heroku.com/$HEROKU_APP_NAME/web
-    - docker push $HEROKU_REGISTRY/$HEROKU_APP_NAME
+    - docker tag $HEROKU_APP_NAME:latest $HEROKU_REGISTRY/$HEROKU_APP_NAME/web
+    - docker push $HEROKU_REGISTRY/$HEROKU_APP_NAME/web
 
 deploy-to-heroku:
   stage: deploy
