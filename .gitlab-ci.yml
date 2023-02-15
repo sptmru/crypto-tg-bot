@@ -12,7 +12,7 @@ stages:
   - deploy
 
 build:
-  stage: build
+  stage: build_and_push
   variables:
     DOCKER_DRIVER: overlay2
   services:
