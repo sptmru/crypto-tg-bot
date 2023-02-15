@@ -1,33 +1,9 @@
-image: docker:18.09.7
+image: ubuntu:22:04
 
-variables:
-  HEROKU_APP_NAME: crypto-bot-tg
-  HEROKU_EMAIL: telegram@sptm.dev
-  HEROKU_API_KEY: 939c73a2-8c1a-42c6-a1e5-fc30a525f985
-  HEROKU_REGISTRY: registry.heroku.com
-  TG_API_KEY: "TELEGRAM_BOT_API_TOKEN=5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
+before_script:
+    - apt-get update -qq && apt-get install -y curl
+    - curl -L https://fly.io/install.sh | sh
 
-stages:
-  - build_and_push
-  - deploy
-
-build:
-  stage: build_and_push
-  variables:
-    DOCKER_DRIVER: overlay2
-  services:
-    - docker:18.09.7-dind
+deploy:
   script:
-    - docker build --pull --force-rm --iidfile imageid.txt -t $HEROKU_APP_NAME .
-    - echo "$HEROKU_APP_NAME" | docker login --username=$HEROKU_APP_NAME --password=$HEROKU_API_KEY $HEROKU_REGISTRY
-    - docker tag $HEROKU_APP_NAME:latest $HEROKU_REGISTRY/$HEROKU_APP_NAME/web
-    - docker push $HEROKU_REGISTRY/$HEROKU_APP_NAME/web
-
-deploy-to-heroku:
-  stage: deploy
-  image: docker:18.09.7
-  script:
-    - apk add --no-cache curl
-    - echo "Docker Image ID is $(cat imageid.txt)"
-    - |-
-      curl -X PATCH https://api.heroku.com/apps/${HEROKU_APP_NAME}/formation --header "Content-Type: application/json" --header "Accept: application/vnd.heroku+json; version=3.docker-releases" --header "Authorization: Bearer ${HEROKU_TOKEN}" --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat imageid.txt)'" } ] }'
+    - flyctl deploy
