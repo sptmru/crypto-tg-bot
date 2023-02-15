@@ -23,8 +23,4 @@ async def unknown(message: types.Message):
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    pending = asyncio.all_tasks(loop)
-    group = asyncio.gather(*pending, return_exceptions=True)
-    results = loop.run_until_complete(group)
-    asyncio.create_task(dispatcher.start_polling())
+    asyncio.create_task(await dispatcher.start_polling())
