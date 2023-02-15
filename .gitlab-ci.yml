@@ -8,8 +8,7 @@ variables:
   TG_API_KEY: "TELEGRAM_BOT_API_TOKEN=5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
 
 stages:
-  - build
-  - push
+  - build_and_push
   - deploy
 
 build:
@@ -20,14 +19,6 @@ build:
     - docker:18.09.7-dind
   script:
     - docker build --pull --force-rm --iidfile imageid.txt -t $HEROKU_APP_NAME .
-
-push:
-  stage: push
-  variables:
-    DOCKER_DRIVER: overlay2
-  services:
-    - docker:18.09.7-dind
-  script:
     - echo "$HEROKU_APP_NAME" | docker login --username=$HEROKU_APP_NAME --password=$HEROKU_API_KEY $HEROKU_REGISTRY
     - docker tag $HEROKU_APP_NAME:latest registry.heroku.com/$HEROKU_APP_NAME/web
     - docker push $HEROKU_REGISTRY/$HEROKU_APP_NAME
