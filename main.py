@@ -23,4 +23,5 @@ async def unknown(message: types.Message):
 
 
 if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
     asyncio.create_task(dispatcher.start_polling())
