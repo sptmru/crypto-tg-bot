@@ -9,5 +9,3 @@ RUN apt update && apt install python3-pip -y
 
 RUN pip3 install -U pip
 RUN pip3 install -r requirements.txt
-
-CMD python main.py
