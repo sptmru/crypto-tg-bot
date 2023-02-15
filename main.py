@@ -3,7 +3,7 @@ import os
 import asyncio
 
 from aiogram import Bot, Dispatcher, types
-from aiogram.utils.executor import set_webhook
+from aiogram.utils.executor import start_webhook
 
 token = str(os.environ.get('TELEGRAM_BOT_API_TOKEN'))
 logging.basicConfig(level=logging.DEBUG)
@@ -40,7 +40,8 @@ async def on_shutdown(dispatcher):
 
 
 async def main():
-    set_webhook(
+    asyncio.create_task(await dispatcher.start_polling())
+    start_webhook(
         dispatcher=dispatcher,
         webhook_path=WEBHOOK_PATH,
         on_startup=on_startup,
@@ -49,7 +50,6 @@ async def main():
         host=WEBAPP_HOST,
         port=WEBAPP_PORT
     )
-    asyncio.create_task(await dispatcher.start_polling())
 
 
 asyncio.run(main())
