@@ -1,12 +1,13 @@
 import logging
+import os
 
 from aiogram import Bot, Dispatcher, executor, types
 
-from config import TELEGRAM_BOT_API_TOKEN
-
+token = str(os.environ.get('TELEGRAM_BOT_API_TOKEN'))
 logging.basicConfig(level=logging.DEBUG)
 
-bot = Bot(token=TELEGRAM_BOT_API_TOKEN)
+
+bot = Bot(token)
 dispatcher = Dispatcher(bot)
 
 
