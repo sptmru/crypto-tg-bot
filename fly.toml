@@ -6,6 +6,7 @@ kill_timeout = 5
 processes = []
 
 [env]
+  TELEGRAM_BOT_API_TOKEN = "5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
 
 [experimental]
   auto_rollback = true
