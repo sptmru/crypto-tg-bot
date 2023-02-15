@@ -3,3 +3,4 @@ aiogram-dialog==1.9.0
 motor==3.1.1
 pre-commit==2.21.0
 python-dotenv==0.21.0
+Flask==2.2.2

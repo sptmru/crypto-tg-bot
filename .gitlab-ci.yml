@@ -1,0 +1,9 @@
+image: ubuntu:22.04
+
+before_script:
+    - apt-get update -qq && apt-get install -y curl
+    - curl -L https://fly.io/install.sh | sh
+
+deploy:
+  script:
+    - /root/.fly/bin/flyctl deploy

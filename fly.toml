@@ -1,0 +1,23 @@
+# fly.toml file generated for crypto-bot-tg on 2023-02-15T17:15:42+04:00
+
+app = "crypto-bot-tg"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+  TELEGRAM_BOT_API_TOKEN = "6128836558:AAGDCRDbkGE_12N_0aEyI4seilPBXfNV8yk"
+  DB_CONNECTION_URI = "uri"
+  BOT_ADMIN_ID = "admin_id"
+  WEBHOOK_URL = "webhook_url"
+  WEBHOOK_PATH = "webhook_path"
+  SERVER_IP_ADDRESS = "0.0.0.0"
+  WEBAPP_HOST = ""
+  WEBAPP_PORT = ""
+
+[experimental]
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  tcp_checks = []
