@@ -4,7 +4,7 @@ variables:
   HEROKU_APP_NAME: crypto-bot-tg
   HEROKU_EMAIL: telegram@sptm.dev
   HEROKU_API_KEY: 939c73a2-8c1a-42c6-a1e5-fc30a525f985
-  HEROKU_REGISTRY: https://registry.heroku.com
+  HEROKU_REGISTRY: registry.heroku.com
   TG_API_KEY: "TELEGRAM_BOT_API_TOKEN=5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
 
 stages:
