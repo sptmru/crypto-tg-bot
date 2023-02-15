@@ -71,6 +71,7 @@ def start() -> None:
     bind_filters(dispatcher)
     register_dialogs(dialog_registry)
     register_handlers(dispatcher)
+    dispatcher.stop_polling()
     start_webhook(
         dispatcher=dispatcher,
         webhook_path=webhook_path,
