@@ -18,7 +18,7 @@ build-preprod:
   script:
     - echo "$HEROKU_APP_NAME" | docker login --username=$HEROKU_APP_NAME --password=$HEROKU_API_KEY $HEROKU_REGISTRY
     - docker build --pull --force-rm --iidfile imageid.txt -t $HEROKU_APP_NAME .
-    - docker tag $HEROKU_APP_NAME/$HEROKU_APP_NAME:latest registry.heroku.com/$HEROKU_APP_NAME/web
+    - docker tag $HEROKU_APP_NAME:latest registry.heroku.com/$HEROKU_APP_NAME/web
     - docker push $HEROKU_REGISTRY/$HEROKU_APP_NAME
     - apk add --no-cache curl
     - echo "Docker Image ID is $(cat imageid.txt)"
