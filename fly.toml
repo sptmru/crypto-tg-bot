@@ -7,8 +7,6 @@ processes = []
 
 [env]
   TELEGRAM_BOT_API_TOKEN = "5041121803:AAHYApDpcK4NN0o6avs33o5cTVUU7ALM42k"
-  FLYCTL_INSTALL = "/root/.fly"
-  PATH = "$FLYCTL_INSTALL/bin:$PATH"
 
 [experimental]
   auto_rollback = true
