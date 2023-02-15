@@ -1,7 +1,8 @@
 import logging
 import os
+import asyncio
 
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, types
 
 token = str(os.environ.get('TELEGRAM_BOT_API_TOKEN'))
 logging.basicConfig(level=logging.DEBUG)
@@ -22,4 +23,6 @@ async def unknown(message: types.Message):
 
 
 if __name__ == "__main__":
-    executor.start_polling(dispatcher, skip_updates=True)
+    bot = Bot
+    dp = Dispatcher(bot)
+    asyncio.create_task(dp.start_polling())
