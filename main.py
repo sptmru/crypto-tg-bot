@@ -17,7 +17,7 @@ from src.crypto_bot.services.repository import Repository
 
 token = str(os.environ.get('TELEGRAM_BOT_API_TOKEN'))
 db_connection_uri = str(os.environ.get("DB_CONNECTION_URI"))
-admin_id = os.environ.get("BOT_ADMIN_ID")
+admin_id = int(os.environ.get("BOT_ADMIN_ID"))
 webhook_url = str(os.environ.get("WEBHOOK_URL"))
 webhook_path = str(os.environ.get("WEBHOOK_PATH"))
 server_ip_address = str(os.environ.get("SERVER_IP_ADDRESS"))

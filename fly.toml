@@ -9,7 +9,7 @@ processes = []
   TELEGRAM_BOT_API_TOKEN = "6222679707:AAFFC8i8uE72ikPUqkHmAxcAtLn33vVuwlI"
   DB_CONNECTION_URI = "mongodb+srv://fvjfFDFNA:hBAhK4nKwC@sptm.9kxod.mongodb.net/?retryWrites=true&w=majority"
   BOT_ADMIN_ID = "289105332"
-  WEBHOOK_URL = "https://cryptobot.sptm.dev"
+  WEBHOOK_URL = "https://cryptobot.sptm.dev/webhook"
   WEBHOOK_PATH = "/webhook"
   SERVER_IP_ADDRESS = "0.0.0.0"
   WEBAPP_HOST = "0.0.0.0"
