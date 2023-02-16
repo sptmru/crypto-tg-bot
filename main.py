@@ -87,7 +87,7 @@ def main() -> None:
     try:
         start()
     except:  # pylint: disable=bare-except
-        logger.exception("Exception")
+        logger.exception("Something is wrong")
 
 
 if __name__ == "__main__":
