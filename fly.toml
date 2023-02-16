@@ -6,7 +6,7 @@ kill_timeout = 5
 processes = []
 
 [env]
-  TELEGRAM_BOT_API_TOKEN = "6222679707:AAFFC8i8uE72ikPUqkHmAxcAtLn33vVuwlI"
+  TELEGRAM_BOT_API_TOKEN = "6149715489:AAGndtDR3Y0WODPqRbpXpGjblzdhZqRgliQ" # @xaurum_dev_bot
   DB_CONNECTION_URI = "mongodb+srv://fvjfFDFNA:hBAhK4nKwC@sptm.9kxod.mongodb.net/?retryWrites=true&w=majority"
   BOT_ADMIN_ID = "289105332"
   WEBHOOK_URL = "https://cryptobot.sptm.dev/webhook"
