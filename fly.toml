@@ -11,8 +11,8 @@ processes = []
   BOT_ADMIN_ID = "289105332"
   WEBHOOK_URL = "https://cryptobot.sptm.dev"
   WEBHOOK_PATH = "/webhook"
-  SERVER_IP_ADDRESS = "66.51.122.241"
-  WEBAPP_HOST = "66.51.122.241"
+  SERVER_IP_ADDRESS = "0.0.0.0"
+  WEBAPP_HOST = "0.0.0.0"
   WEBAPP_PORT = "8080"
 
 [experimental]
@@ -23,6 +23,10 @@ processes = []
   tcp_checks = []
   internal_port = 8080
   protocol = "tcp"
-    [[services.ports]]
-      handlers = ["http"]
-      port = 8080
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+    force_https = true
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = "443"
