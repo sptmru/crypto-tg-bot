@@ -5,5 +5,7 @@ before_script:
     - curl -L https://fly.io/install.sh | sh
 
 deploy:
+  only:
+    - dev
   script:
     - /root/.fly/bin/flyctl deploy
