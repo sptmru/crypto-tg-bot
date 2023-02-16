@@ -4,9 +4,8 @@ before_script:
     - apt-get update -qq && apt-get install -y curl
     - curl -L https://fly.io/install.sh | sh
 
-only:
-  - dev
-
 deploy:
+  only:
+    - dev
   script:
     - /root/.fly/bin/flyctl deploy
