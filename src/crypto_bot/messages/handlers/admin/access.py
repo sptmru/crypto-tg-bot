@@ -84,6 +84,10 @@ def db_error_message() -> str:
     return "Неизвестная ошибка!"
 
 
+def no_configuration_available() -> str:
+    return "Конфигуратор не настроен"
+
+
 def help_text() -> str:
     return (
         "/access - предоставление доступа пользователю по его <code>user id</code>. "

@@ -39,7 +39,6 @@ class ConfigurationRepository(AbstractConfigurationRepository):
 
     @exception_handler
     async def update_configuration(self, configuration: Configuration) -> int:
-        print(configuration)
         query = {"user_id": configuration.user_id}
         new_values = {"$set": {"configuration": configuration_to_dict(configuration)}}
         updated = await self.collection.update_one(query, new_values)
@@ -61,16 +60,17 @@ def configuration_from_dict(user_dict: Dict) -> Configuration:
         if configuration_dict is None:
             configuration = Configuration()
         else:
+            # TODO: using .set to avoid KeyErrors, need to set default values correctlyw
             configuration = Configuration(
-                user_id=user_dict["user_id"],
-                buy_mode=BuyMode(configuration_dict["buy_mode"]),
-                crypto_exchange=CryptoExchange(configuration_dict["crypto_exchange"]),
-                period=configuration_dict["period"],
-                usd=Decimal(configuration_dict["usd"]),
-                kpi_usd_values=get_kpi_usd_values(configuration_dict["kpi_usd_values"]),
-                api_key=configuration_dict["api_key"],
-                api_secret=configuration_dict["api_secret"],
-                api_passphrase=configuration_dict["api_passphrase"],
+                user_id=user_dict.get("user_id", ""),
+                buy_mode=BuyMode(configuration_dict.get("buy_mode", "")),
+                crypto_exchange=CryptoExchange(configuration_dict.get("crypto_exchange", "")),
+                period=configuration_dict.get("period", ""),
+                usd=Decimal(configuration_dict.get("usd", "")),
+                kpi_usd_values=get_kpi_usd_values(configuration_dict.get("kpi_usd_values", "")),
+                api_key=configuration_dict.get("api_key", ""),
+                api_secret=configuration_dict.get("api_secret", ""),
+                api_passphrase=configuration_dict.get("api_passphrase", "")
             )
     return configuration
 

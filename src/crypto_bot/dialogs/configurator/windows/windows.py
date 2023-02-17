@@ -17,6 +17,7 @@ from src.crypto_bot.dialogs.configurator.windows.no_account import no_account
 from src.crypto_bot.dialogs.configurator.windows.period import period
 from src.crypto_bot.dialogs.configurator.windows.start_enter_kpi import start_enter_kpi
 from src.crypto_bot.dialogs.configurator.windows.usd import usd
+from src.crypto_bot.dialogs.configurator.windows.change_api_key import change_api_key
 
 
 def get_windows() -> List[Window]:
@@ -34,4 +35,5 @@ def get_windows() -> List[Window]:
         api_key,
         api_secret,
         api_passphrase,
+        change_api_key,
     ]

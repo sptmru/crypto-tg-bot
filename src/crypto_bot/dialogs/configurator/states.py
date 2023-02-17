@@ -15,3 +15,4 @@ class ConfiguratorDialog(StatesGroup):
     api_key = State()
     api_secret = State()
     api_passphrase = State()
+    change_api_key = State()

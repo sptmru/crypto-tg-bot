@@ -132,3 +132,11 @@ def lower_kpi() -> str:
 
 def server_ip() -> str:
     return "Для лучшей работы при создании ключа можно добавить IP-адрес сервера:"
+
+
+def change_api_key() -> str:
+    return ""
+
+
+def no_configuration_available() -> str:
+    return "Конфигуратор не настроен"
